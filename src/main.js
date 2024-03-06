@@ -5,12 +5,15 @@ import config from "config"
 import { yaGPT } from "./ya_gpt.js";
 import { Loader } from "./loader.js";
 import { Dialog } from "./dialog.js";
+import { DB_dispatcher } from "./db.js";
 
 const dialogs = {}
 const bot = new Telegraf(config.get('ya_stt_bot'), {
 //const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
     handlerTimeout: Infinity,
 })
+
+const db = new DB_dispatcher()
 
 bot.command('start', ctx => {
     try {
@@ -100,6 +103,7 @@ bot.on(message('text'), async (ctx) => {
         //loader.hide()
         ctx.reply(res_ya)
         dialogs[chat_id].add_assistant_message(res_ya)
+        db.serialize()
     } catch (err) {
         console.log('Error while processing text.', err.message)
     }
