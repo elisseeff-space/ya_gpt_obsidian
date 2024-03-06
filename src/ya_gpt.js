@@ -35,12 +35,13 @@ const getMessage = (m) => {
     return data
 }
 
-export async function yaGPT(message='') {
+export async function yaGPT(messages=[]) {
   try {
+    data.messages = messages
     const response = await axios.post(
         `https://llm.api.cloud.yandex.net/foundationModels/v1/completion`,
-        //data,
-        getMessage(message),
+        data,
+        //getMessage(message),
         {
           headers: {
             'Authorization': `Api-Key ${yandexgpt_key}`,
