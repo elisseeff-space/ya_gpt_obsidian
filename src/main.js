@@ -8,8 +8,8 @@ import { Dialog } from "./dialog.js";
 import { DB_dispatcher } from "./db.js";
 
 const dialogs = {}
-//const bot = new Telegraf(config.get('ya_stt_bot'), {
-const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
+const bot = new Telegraf(config.get('ya_stt_bot'), {
+//const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
     handlerTimeout: Infinity,
 })
 
