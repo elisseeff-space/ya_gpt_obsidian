@@ -8,8 +8,8 @@ import { Dialog } from "./dialog.js";
 import { DB_dispatcher } from "./db.js";
 
 const dialogs = {}
-const bot = new Telegraf(config.get('ya_stt_bot'), {
-//const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
+//const bot = new Telegraf(config.get('ya_stt_bot'), {
+const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
     handlerTimeout: Infinity,
 })
 
@@ -79,7 +79,6 @@ bot.command('help', ctx => {
 })
 
 bot.on(message('text'), async (ctx) => {
-    
     try {
         const text = ctx.message.text
         //const chat_id = toString(ctx.chat.id)
@@ -96,14 +95,22 @@ bot.on(message('text'), async (ctx) => {
             dialogs[chat_id].update_dialog(ctx)
             //console.log(dialogs[chat_id])
         }
-        //const res_ya = await yaGPT(text)
         const res_ya = await yaGPT(dialogs[chat_id].dialog_messages)
         if(!res_ya) return('API Error!', res_ya)
 
         //loader.hide()
-        ctx.reply(res_ya)
-        dialogs[chat_id].add_assistant_message(res_ya)
-        db.serialize()
+        ctx.reply(res_ya.text)
+        
+        dialogs[chat_id].add_assistant_message(res_ya.text)
+        const user_id = ctx.from.id
+
+        //const formatted_date = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
+        const formatted_date = new Date().toISOString().slice(0, 19);
+
+        let text_buf = res_ya.text.replaceAll("'", "^")
+ 
+        var param_in = [chat_id, user_id, formatted_date, dialogs[chat_id].role, text, text_buf, res_ya.inputTextTokens, res_ya.completionTokens, res_ya.totalTokens]
+        db.jornal_add_record(param_in)
     } catch (err) {
         console.log('Error while processing text.', err.message)
     }

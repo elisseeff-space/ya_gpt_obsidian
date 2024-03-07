@@ -1,23 +1,18 @@
-import { Dialog } from "./dialog.js";
+//const date = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
+const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'Europe/Moscow'
+};
 
-const ctx = {
-    chat: {
-        id: 234
-    },
-    message: {
-        text: "This is a message"
-    }
-}
+let date = new Date().toLocaleString("ru-RU", options);
+//todayDate = date.toISOString()
+console.log(date);
 
-const dialogs = {}
-
-for (let chat_id = 0; chat_id < 8; chat_id++) {
-    ctx.chat.id = chat_id
-    if (chat_id in dialogs) {
-        dialogs[chat_id].update_dialog(ctx)
-    } else {
-        dialogs[chat_id] = new Dialog(ctx)
-    }
-  } 
- 
-console.log(dialogs)
+let todayDate = new Date().toISOString("ru-RU", options).slice(0, 19);
+//todayDate = todayDate.toISOString()
+console.log(todayDate);

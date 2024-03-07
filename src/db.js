@@ -26,7 +26,7 @@ export class DB_dispatcher {
         })
     };
 
-    async jornal_add_record() {
+    async jornal_add_record(param_in=[]) {
 
         /* CREATE TABLE "tbl_ya_gpt_log" (
             "chat_id"	TEXT,
@@ -40,8 +40,8 @@ export class DB_dispatcher {
             "usage_totalTokens"	INTEGER
         )
         */
-         
-        await this.query(`INSERT INTO tbl_ya_gpt_log VALUES ('${this.prm[0]}', ${this.prm[1]}, '${this.prm[2]}', '${this.prm[3]}', '${this.prm[4]}', '${this.prm[5]}', ${this.prm[6]}, ${this.prm[7]}, ${this.prm[8]});`, 'run');
+        this.prm = param_in
+        await this.query(`INSERT INTO tbl_ya_gpt_log VALUES ('${param_in[0]}', ${param_in[1]}, '${param_in[2]}', '${param_in[3]}', '${param_in[4]}', '${param_in[5]}', ${param_in[6]}, ${param_in[7]}, ${param_in[8]});`, 'run');
     };
 
     async serialize() {

@@ -53,31 +53,15 @@ export async function yaGPT(messages=[]) {
       //console.log(JSON.stringify(response.data, null, 2));
       const response_data = JSON.stringify(response.data, null, 2)
       //['result']['alternatives']['message']['text']
-      return(response.data.result.alternatives[0]['message']['text']);
+      let result_obj = {}
+      result_obj['text'] = response.data.result.alternatives[0]['message']['text']
+      result_obj['inputTextTokens'] = response.data.result.usage.inputTextTokens
+      result_obj['completionTokens'] = response.data.result.usage.completionTokens
+      result_obj['totalTokens'] = response.data.result.usage.totalTokens
+      //console.log(result_obj)
+      return(result_obj);
       //return(response_data[])
   } catch (e) {
     console.error('Error while Chat complition', e.message)
   }
 };
-/*
-async function main() {
-  try {
-    const response = await axios.post(
-      `https://llm.api.cloud.yandex.net/foundationModels/v1/completion`,
-      data,
-      {
-        headers: {
-          'Authorization': `Api-Key ${yandexgpt_key}`,
-          'x-folder-id': folder_id,
-        },
-      }
-    );
-    console.log(response.status);
-    console.log(JSON.stringify(response.data, null, 2));
-  } catch (err) {
-    console.error('error:', err)
-  }
-}
-
-main();
-*/
