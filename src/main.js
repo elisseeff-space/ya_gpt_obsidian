@@ -8,8 +8,8 @@ import { Dialog } from "./dialog.js";
 import { DB_dispatcher } from "./db.js";
 
 const dialogs = {}
-const bot = new Telegraf(config.get('ya_stt_bot'), {
-//const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
+//const bot = new Telegraf(config.get('ya_stt_bot'), {
+const bot = new Telegraf(config.get('elis_ya_gpt_bot'), {
     handlerTimeout: Infinity,
 })
 
@@ -78,6 +78,16 @@ bot.command('help', ctx => {
     }
 })
 
+function formatted_date() {
+    // Set the timezone offset for Moscow time (+3 hours)
+    let timeZoneOffset = -3 * 60; // Offset in minutes (negative offset for Eastern European Time)
+
+    let date = new Date()
+    // Adjust the date to the desired timezone by adding the offset
+    date.setMinutes(date.getMinutes() - timeZoneOffset);
+    return date.toISOString().slice(0, 19).replace('T', ' ');
+}
+
 bot.on(message('text'), async (ctx) => {
     try {
         const text = ctx.message.text
@@ -104,12 +114,9 @@ bot.on(message('text'), async (ctx) => {
         dialogs[chat_id].add_assistant_message(res_ya.text)
         const user_id = ctx.from.id
 
-        //const formatted_date = new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
-        const formatted_date = new Date().toISOString().slice(0, 19);
-
         let text_buf = res_ya.text.replaceAll("'", "^")
  
-        var param_in = [chat_id, user_id, formatted_date, dialogs[chat_id].role, text, text_buf, res_ya.inputTextTokens, res_ya.completionTokens, res_ya.totalTokens]
+        var param_in = [chat_id, user_id, formatted_date(), dialogs[chat_id].role, text, text_buf, res_ya.inputTextTokens, res_ya.completionTokens, res_ya.totalTokens]
         db.jornal_add_record(param_in)
     } catch (err) {
         console.log('Error while processing text.', err.message)
